@@ -162,3 +162,109 @@ Show your pair your best finding.
 - Same model, same prompt: what made the API Specialist answer differently?
 - What would *your team's* reviewer check?
 - Which of your weekly tasks deserves its own agent?
+
+---
+
+## For your own use case
+
+Bringing your own repository? Build the same two kinds of agent for your work: a **repository agent** that knows your team's conventions, and a **personal agent** that reflects your own review priorities.
+
+**Before you start:**
+- Open your repository in VS Code and check that Copilot responds.
+- Save your existing work and use a working branch where you are allowed to experiment. Do not overwrite existing agents or discard unrelated changes.
+- Pick a small, realistic task to discuss, such as adding validation, changing a report or extending an automation script. This exercise compares plans; you will not implement the feature.
+- Choose unused agent names. The examples below use `project-specialist` and `my-reviewer`; change the names and paths if they already exist.
+- Replace every `<placeholder>` with your own information. Keep the same model when comparing answers.
+
+### Part A: A repository agent for your team
+
+**A1. Choose its job.** Think of a responsibility that should be handled consistently by anyone working in this repository. Keep the role focused, rather than creating an agent that does everything.
+
+| Your area | Example repository agent | Knowledge it should use |
+|---|---|---|
+| Application or service | Service Specialist | Existing modules, error handling, interfaces and tests |
+| Data | Pipeline Specialist | Data contracts, transformations, validation and retry conventions |
+| Frontend | UI Specialist | Shared components, accessibility and interaction patterns |
+| Platform or automation | Automation Specialist | Existing scripts, configuration, safe defaults and verification steps |
+
+**A2. Get a baseline plan.** Start a new chat, choose the built-in **Agent**, and send:
+```
+I want to add <SMALL FEATURE> so that <USER> can <BENEFIT>.
+Reply with a plan only: the relevant files, existing patterns to reuse, important risks and how to verify the change.
+Don't implement anything, edit files or run commands.
+```
+Keep the answer so you can compare it later.
+
+**A3. Create the workspace agent.** Use **Chat: New Custom Agent** in the Command Palette, choose **Workspace**, and name it `project-specialist`. The file belongs in `.github/agents/project-specialist.agent.md` in your repository.
+
+In a new chat with the built-in **Agent**, attach any existing team guidance or relevant code examples, then send:
+```
+Fill in .github/agents/project-specialist.agent.md as a custom agent for this repository.
+- Header: name "<TEAM ROLE>", a description saying when to use it, and tools: ['read', 'search', 'edit'].
+- Role: help the team with <FOCUSED RESPONSIBILITY>.
+- Read the existing project documentation and relevant code to identify real conventions.
+- Include a short workflow: understand the request, inspect related code, reuse patterns, make scoped changes when requested, and propose relevant verification.
+- Include these team requirements: <TWO OR THREE REAL RULES>.
+- Use only facts supported by this repository or the guidance I attached. Flag missing information instead of inventing rules.
+- Never deploy, commit or push. No terminal access is needed for this exercise.
+Max 50 lines. Only edit this agent file, not application code.
+```
+
+Review the file before choosing **Keep**. Are its rules useful to your team? Are the paths and conventions real? Change one rule yourself to make the role more precise. The tool list allows file changes when requested but leaves out terminal execution; instructions and tool permissions are different controls.
+
+**A4. Compare with the baseline.** Start a new chat, select your agent by its display name, and send the **exact A2 prompt** again using the same model.
+
+Compare the two plans:
+- Does the specialist identify the right files and reuse your existing patterns?
+- Does it apply the team requirements you gave it?
+- Are its verification steps appropriate for your project?
+- Does it ask about missing requirements rather than guessing?
+- Did it respect the request to plan without editing files?
+
+There is no OctoCAT answer key for your repository. Judge the result against your baseline, your team's standards and the actual code. Adjust the agent and repeat if its guidance is too vague.
+
+**Done when:** your repository agent appears in the picker and gives a focused plan grounded in your project. Its configuration lives in the repository so it can be reviewed and shared through your team's normal process.
+
+### Part B: A personal agent for your own work
+
+**B1. Choose your review priorities.** Think of something you repeatedly check or explain in your role. For this exercise, make a **read-only reviewer** with two concrete checks, such as clear error messages, accessible controls, data validation or reliable retry behaviour.
+
+Choose checks that matter to you across projects. Keep repository-specific rules in the team agent rather than hard-coding one project's paths into your personal agent.
+
+**B2. Create it in your user profile.** Use **Chat: New Custom Agent**, choose **User**, and name it `my-reviewer`. This keeps it in the active VS Code user profile on your laptop, DevBox or codespace, not in the repository. If **User** is unavailable, you can practise with **Workspace**, but that fallback is repository-scoped, not personal.
+
+Replace the template with this, then fill in your role, area and checks:
+
+```markdown
+---
+name: my-reviewer
+description: "Use when I ask for a review in my area. Read-only advice; never edits files or runs commands."
+tools: ['read', 'search']
+---
+I am a <ROLE> and I mostly work on <AREA>. You are my personal reviewer.
+
+When I ask for a review:
+1. Read the file or selection I provide and related files needed to understand it.
+2. Focus on <CHECK 1>, <CHECK 2> and obvious correctness problems.
+3. Use the current repository's conventions. State uncertainties instead of inventing requirements.
+4. Report at most 5 findings with the file, line, problem and suggested fix. Do not invent findings to fill the list.
+5. Never edit files or run commands. If I ask for a fix, explain the proposed change instead.
+```
+
+**B3. Try it on your code.** Open a file you understand, start a new chat, select **my-reviewer**, attach the file or selection, and send:
+```
+Review this code using my two checks.
+Explain the most important findings and point to the evidence.
+Don't edit anything or run commands.
+```
+Check the findings yourself. Are they specific, correct and useful? Refine one of your checks if the feedback is too generic.
+
+**B4. Test the boundary.** In the same chat, send:
+```
+Fix the first finding.
+```
+If there were no findings, ask it to rewrite the selected code for readability instead. It should **explain a proposed change without applying it**, because it only has read and search tools. Check the tool calls and **Source Control**: no review-related file edits or terminal commands should have occurred.
+
+**Done when:** your personal reviewer is available in the picker, applies your priorities and stays read-only even when asked to make a change.
+
+**Reflect:** which rules belong to the team and should travel with the repository? Which priorities belong to you and should travel with your user profile? Keep the two scopes distinct. Do not implement the planned feature, commit or push as part of this exercise.

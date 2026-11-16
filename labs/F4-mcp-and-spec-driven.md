@@ -179,3 +179,117 @@ From the repo root, use the commands for your environment:
 - Which building block will you use first at PGGM: prompts, agents, instructions, skills, MCP, or specs and tests?
 
 [Labs index](README.md) · [Previous: F3](F3-context-engineering.md) · Next: none
+
+---
+
+## For your own use case
+
+Bringing your own repository? Connect Microsoft Learn as a source of technical guidance, then take a small feature from a specification you approve to tested, working code.
+
+**Before you start:**
+- Open your repository in VS Code, save your work and use a working branch where you are allowed to make changes.
+- Keep any real repository instructions or skills you created in F3. Do not copy OctoCAT's fictional TAO rule into your project.
+- Choose a small feature that is not already implemented, such as validating an input, filtering a result list or adding a command-line option. State who needs it, why, and what is out of scope.
+- Check that the relevant existing tests run successfully before starting. Use your project's documented tools and shell; if there is no test setup, agree an approach with your team rather than installing a new framework without review.
+- Replace every `<placeholder>` below. Your repository does not need OctoCAT's `tdd-planner`, `tdd-red` or `tdd-green` agents: the prompts below use the built-in **Plan** and **Agent** modes.
+
+### Part 1: Connect Microsoft Learn MCP in your repository
+
+**1.1 Add or reuse the server.**
+1. Open the Command Palette with **Ctrl+Shift+P** and choose **MCP: Add Server...**.
+2. Choose **HTTP** and enter `https://learn.microsoft.com/api/mcp`.
+3. Name it `microsoft-learn` and choose **Workspace** so the configuration is associated with your repository. If that server is already configured, reuse it rather than adding a duplicate.
+4. Open your repository's `.vscode/mcp.json` and start the Microsoft Learn entry. Preserve any other server entries and leave unrelated servers stopped for this exercise. Review any trust or tool-approval prompts before accepting.
+
+This is a remote HTTP server: the setup is the same in Codespaces and local VS Code, with local MCP package to install.
+
+**1.2 Confirm the tools are available.** Open Chat's tool configuration using the controls from Part 1 of the main lab. Look for `microsoft_docs_search` and `microsoft_docs_fetch`, and make sure they are available to the chat.
+
+**1.3 Find guidance relevant to your feature.** Start a new chat in **Agent** mode and send:
+```
+Use the Microsoft Learn MCP tools to find guidance on <TECHNICAL TOPIC RELEVANT TO MY FEATURE>.
+Summarise the guidance in at most 6 bullets with source links.
+Distinguish general design advice from requirements specific to a Microsoft product or version.
+Don't edit files or run terminal commands.
+```
+
+Choose a topic that genuinely helps your decision, such as API validation, error responses, pagination, accessibility or testing guidance for technology you use. Search with general technical terms, not private source code or credentials. Do not introduce a Microsoft service or framework just because a search result uses it.
+
+Expand the tool call and open a cited source. Did the tools actually run, and does the guidance apply to your technology and version?
+
+**Done when:** a Microsoft Learn tool call returns useful guidance with sources you have checked. Keep this chat open for the specification work.
+
+### Part 2: Specify, test and implement your feature
+
+Use the same chat for the following steps, switching between **Plan** and **Agent** as directed. The saved specification, not an earlier chat draft, will be the source of truth.
+
+**2.1 Draft the specification.** Choose **Plan** and send:
+```
+Specify <SMALL FEATURE> for this repository so that <USER> can <BENEFIT>.
+Inspect the existing code and use the relevant Microsoft Learn guidance already discussed.
+Include:
+- The goal, current behaviour and proposed behaviour.
+- In-scope and out-of-scope work.
+- Numbered acceptance criteria covering the normal case and relevant edge/error cases.
+- A Given/When/Then test case for each criterion, linked to its number.
+- Likely files to change and existing patterns to reuse.
+- Existing test/build commands, their working directories and a manual verification scenario.
+Call out unanswered questions and assumptions instead of choosing business rules for me.
+Return the specification only. Don't edit files, implement code or run terminal commands.
+```
+Read it as a product and engineering decision, not just a list of files. Are the expected results precise enough that you could judge a test as passing or failing?
+
+**2.2 Review, decide and save.** Switch to **Agent** and send:
+```
+Review this draft against the Microsoft Learn sources and this repository's conventions.
+Suggest at most three improvements to the acceptance criteria and their test cases.
+Don't edit files or implement anything.
+```
+
+Accept or reject each suggestion yourself. Resolve open questions, remove unnecessary scope and update each affected test case along with its criterion.
+
+Save the approved specification as a Markdown file in your repository's usual location. If there is no convention, choose a clear location such as `docs/feature-specs/<feature-name>.md`. You can create it yourself or ask **Agent**:
+```
+Save the approved specification as <SPEC_FILE>.
+Only create or update that specification file. Don't implement the feature or write tests yet.
+```
+Open the saved file, make any final corrections by hand and save it. Use this exact path in the next prompts.
+
+**2.3 Red: write tests before implementation.** Stay in **Agent** and send:
+```
+Act as a TDD red-phase agent.
+Read <SPEC_FILE> from disk; I may have edited it since the chat draft.
+Write tests for its acceptance criteria using this repository's existing test framework and conventions.
+Only change the required test files and test fixtures. Don't change production code, dependencies or the specification.
+Run the relevant tests with the existing single-run command and report which criteria each test covers.
+The new tests must fail because the specified feature is missing, not because of a broken setup.
+Don't deploy, commit or push.
+```
+
+Review the tests and the actual failure output. Do the assertions express your agreed behaviour? A missing tool, dependency or invalid test command is a setup problem, not the expected red result. Resolve that before continuing, without weakening the feature's tests.
+
+**2.4 Green: implement only the agreed behaviour.** Stay in **Agent** and send:
+```
+Act as a TDD green-phase agent.
+Implement the smallest change that satisfies <SPEC_FILE> and the tests just written.
+Read the saved specification and tests first. Reuse this repository's existing patterns and helpers.
+Don't change the specification or tests, add unrelated features, or update dependencies.
+If the specification is contradictory or cannot be implemented as written, stop and explain the issue.
+Run the relevant new and existing tests with the project's single-run commands.
+Update directly affected documentation where needed, and summarise the changed files and verification results.
+Don't deploy, commit or push.
+```
+
+Review every change before choosing **Keep**. Check that the agent did not make tests pass by deleting assertions, changing expected results or broadening the scope.
+
+**2.5 Verify the feature yourself.**
+1. Run the relevant tests yourself using the commands verified for your project. Run any additional affected checks or build required by your team's workflow.
+2. Try the manual scenario in the specification through your project's actual interface: a screen, API request, script, command or data-processing result.
+3. Check each acceptance criterion against its test and observed result. Include the relevant invalid-input, empty-result or other edge cases you agreed.
+4. Review the diff for unexpected files and confirm that unrelated behaviour is preserved. If the requirements need to change, explicitly revise the specification and corresponding tests before continuing implementation.
+
+Use your own repository's commands and interface, not OctoCAT's (unless your project happens to use them).
+
+**Done when:** the small feature works, its tests and relevant existing checks pass, and every acceptance criterion has evidence. A plan alone or an agent's success message is not completion.
+
+**Reflect:** what did the external guidance improve? Which suggestion did you reject? Could another developer implement the feature from the saved specification without reading your chat? You have now practised the whole loop on your own codebase: find guidance, own the specification, observe failing tests, implement and verify.

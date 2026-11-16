@@ -161,3 +161,99 @@ Nothing later today depends on F1. Keep your changes, or discard them with **Sou
 - Which pillar made your second prompt better?
 - When would you start with **Plan** instead of **Agent**?
 - What did you check before you clicked **Keep**?
+
+---
+
+## For your own use case
+
+Bringing your own repository? Follow the same four parts below using your codebase instead of OctoCAT. The language, file names, commands and feature should come from your project.
+
+**Before you start:**
+- Open your repository in VS Code and check that Copilot responds.
+- Save your existing work and use a working branch where you are allowed to experiment. Only undo changes made for this exercise; do not discard unrelated work.
+- Choose a small feature you can describe in one sentence, such as filtering a list, adding validation or adding a command-line option. Decide what observable result would show that it works.
+- Replace every `<placeholder>` below with your own information.
+
+### Part 1: Ask, to understand your codebase
+
+**1.1 A vague prompt.** Start a new chat, choose **Ask**, and send:
+```
+explain this project
+```
+
+**1.2 A refined prompt.** Start a new chat, choose **Ask** again, and send:
+```
+I'm a <ROLE> working in this repository.
+Explain what this project does, its main languages and frameworks, and how it is run and tested.
+Focus on <AREA, e.g. data processing / user interface / API / automation>.
+Point to the files or configuration that support your explanation.
+Answer in at most 10 bullets. Don't edit files or run commands.
+```
+Compare the answers. Did adding your role, area and output expectations make the second answer more useful? Check a few of its claims against the actual files.
+
+**1.3 Find the starting point.** In the same chat, still in **Ask**, send:
+```
+I want to add <SMALL FEATURE> so that <USER> can <BENEFIT>.
+Which existing files and functions are relevant? Is there similar behaviour I can reuse?
+Suggest the smallest useful change. Don't implement anything.
+```
+
+**Done when:** you can explain the relevant part of your codebase and identify where your small change belongs.
+
+### Part 2: Code completion and inline chat, to make a small change
+
+1. Open the relevant implementation file, a related file and an existing example of similar behaviour. Keep them open to give Copilot context.
+2. At a suitable place in the implementation file, type a short comment describing **one small piece** of your feature, using your language's comment syntax. For example: "Return only items matching the selected category." Press **Enter**.
+3. Inspect the suggested code before accepting it with **Tab**. Does it use the project's types, naming and helpers? Accept only a useful suggestion; reject unrelated changes. If nothing appears, start typing a meaningful function name or signature.
+4. Select your new code, open inline chat with **Ctrl+I** (Mac: **Cmd+I**), and send:
+   ```
+   Add a short comment explaining this code, following this repository's style.
+   Don't change its behaviour.
+   ```
+5. Review the edit before accepting. If you are unsure what the code does, ask Copilot to explain the selection.
+
+**Done when:** you have a small, reviewed change that fits your project. It does not need to complete the whole feature yet.
+
+### Part 3: Agent, to complete and verify the feature
+
+**3.1 Give the agent a bounded task.** Start a new chat, choose **Agent**, attach the relevant file or files, and send:
+```
+Complete <SMALL FEATURE>, building on the change I made in <FILE>.
+Expected behaviour: <OBSERVABLE RESULT>.
+Follow this repository's patterns and reuse existing helpers.
+Only change files needed for this feature; avoid unrelated refactoring or dependency updates.
+Update directly affected tests and documentation where appropriate.
+Don't run commands, deploy, commit or push anything yet.
+```
+
+**3.2 Review before keeping.** Check every changed file. Does the change meet your expected behaviour? Did the agent stay within scope? Use **Keep** or **Undo** after reviewing, not just because it reports success.
+
+**3.3 Verify using your project's tools.** In **Ask**, request:
+```
+Which existing commands should I run to verify this change?
+Check this repository's documentation, scripts and test configuration.
+Give the smallest relevant test/build commands and a manual check of the feature.
+Don't run anything or edit files.
+```
+Check those commands before running them yourself. Use **your repository's** setup and tools, not OctoCAT's commands unless they also apply. Stop at the first error, and check that any failing test is about the feature rather than a missing tool or dependency.
+
+**Done when:** the relevant checks pass and you can demonstrate the feature's expected result. Do not deploy, commit or push as part of this exercise.
+
+### Part 4: Plan, to think through your next feature
+
+1. Think of a second feature or a broader improvement that you would normally discuss before coding.
+2. Write down who needs it, what they should be able to do and what is out of scope. Attach an issue description, design or your notes if you have them.
+3. Start a new chat, choose **Plan** using the same control as Part 4 above, and send:
+   ```
+   Plan <NEXT FEATURE> for this repository so that <USER> can <BENEFIT>.
+   Use the attached requirements and the existing code as context.
+   Keep <OUT-OF-SCOPE ITEMS> out of the plan.
+   Propose small phases, likely files to change, important edge cases and how to verify each phase.
+   Call out assumptions and questions rather than inventing requirements.
+   Reply with the plan only. Don't implement anything, edit files or run commands.
+   ```
+4. Review the plan. Are the phases small enough? Does it reuse existing code? Are the suggested files and checks real? Answer its questions and refine the scope before anyone implements it.
+
+**Done when:** you have a plan you can discuss with your team, with no implementation changes from this part.
+
+**Reflect:** which context improved the answer, which suggestion did you reject, and what evidence made you trust the result? The same rhythm applies in your own work: understand with **Ask**, make a focused edit with **code completion/inline chat**, complete a bounded task with **Agent**, and think ahead with **Plan**.
