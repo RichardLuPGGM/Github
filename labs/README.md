@@ -51,6 +51,8 @@ On managed Windows machines, check the [enterprise certificate-trust guidance](0
 
 Follow your option's setup and app checks before the training. If installation permissions, enterprise network restrictions or time prevent a working setup, contact IT or ask about pairing with someone whose environment is ready.
 
+**Use the lab sheets for current commands and paths.** The [slide exports](./slides/) still show the earlier layout in places. Application paths are now rooted under `app/`, and root-level Make commands use `make -C app ...`. Follow the updated lab sheets rather than copying older commands from a slide.
+
 1. Follow [01-setup.md](01-setup.md) before F1. It covers your environment, the `workshop` branch, getting the reference files, checking the app and Copilot, and troubleshooting.
 2. Keep the current lab sheet open next to your workspace. On GitHub, use a second browser tab so you can copy prompts and commands. In VS Code, right-click the lab file and choose **Open Preview** for the formatted view.
 3. Read the opening story and completion checks before starting each lab. They explain what you're trying to achieve; the numbered steps then guide you through it.
@@ -105,7 +107,7 @@ Not every grey code block belongs in the same place. Read the sentence above it:
 - **"Run in the terminal":** use your Codespaces terminal, or local PowerShell with the [command equivalents](01-setup.md#local-windows-equivalents-for-lab-commands) instead of `make`. Unless a step says otherwise, start from the repository root.
 - **"Create", "replace" or "paste into a file":** edit the named file. A Markdown or JSON example is file content, not a terminal command.
 
-The labs use **API-only tests**: `make test-api` in Codespaces or `npm.cmd --prefix .\api test` in Windows PowerShell. Press **q** to leave watch mode, or use the [single-run commands](01-setup.md#local-windows-equivalents-for-lab-commands) when an agent runs tests.
+The labs use **API-only tests**: `make -C app test-api` in Codespaces or `npm.cmd --prefix .\app\api test` in Windows PowerShell. Press **q** to leave watch mode, or use the [single-run commands](01-setup.md#local-windows-equivalents-for-lab-commands) when an agent runs tests.
 
 The code-block copy button saves typing; it doesn't decide where the text should go.
 

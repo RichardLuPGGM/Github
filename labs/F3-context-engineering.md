@@ -27,7 +27,7 @@ Two parts:
 | **Frontmatter** | The `---` header with `name` and `description`: metadata for discovering when a skill applies. Its body explains how. |
 | **[Custom agent](https://learn.microsoft.com/en-us/training/modules/configure-customize-github-copilot-visual-studio-code/4-create-custom-github-copilot-agents#what-are-custom-github-copilot-agents)** | A role and tool permissions: who does the work, rather than the workflow they can load. |
 | **CRUD** | Create, read, update and delete: the operations you'll add for delivery vehicles. |
-| **[TAO](../docs/tao.md)** | A fictional logging/metrics standard for the before/after comparison, not a package to install. |
+| **[TAO](../app/docs/tao.md)** | A fictional logging/metrics standard for the before/after comparison, not a package to install. |
 
 **The key distinction:** instructions set rules, a skill packages a repeatable process, and an agent supplies the role and tools.
 
@@ -45,7 +45,7 @@ Run terminal commands from the **repo root**. Use the Codespaces commands or the
 *The steps add up to 22 minutes; the other 3 minutes are buffer.*
 
 > **The story.** Every PGGM team has internal standards that no AI model has ever seen. OctoCAT has one too: **TAO**, a made-up internal library for logging and metrics.
-> - It exists only as a document: [docs/tao.md](../docs/tao.md). Its examples use the package name `@tao/core` and functions such as `initTAO`, `observe()`, decorators like `@Measure`, and `MetricRegistry`.
+> - It exists only as a document: [app/docs/tao.md](../app/docs/tao.md). Its examples use the package name `@tao/core` and functions such as `initTAO`, `observe()`, decorators like `@Measure`, and `MetricRegistry`.
 > - It is **not** a real npm package. That's why in this lab we only *ask* about TAO in **Ask** mode: no code gets written, so nothing breaks.
 
 ### A1. Before (⏱ 3 min)
@@ -55,33 +55,33 @@ How should I add logging and metrics to the supplier route? 5 bullets, no code.
 ```
 Note what it suggests. Probably it suggests well-known packages such as winston, pino, prom-client or OpenTelemetry.
 
-> **Did it already mention TAO?** Then Copilot found [docs/tao.md](../docs/tao.md) by searching, which was lucky. Carry on: the file you're about to write makes it happen *every time, for everyone*.
+> **Did it already mention TAO?** Then Copilot found [app/docs/tao.md](../app/docs/tao.md) by searching, which was lucky. Carry on: the file you're about to write makes it happen *every time, for everyone*.
 
 ### A2. Draft the instructions file (⏱ 7 min)
 Start a new chat (opens Agent mode by default) and send:
 ```
 Create .github/copilot-instructions.md for this repository: what the app is, how to install, run and test it,
-the architecture (link to docs/architecture.md) and the main code conventions.
-Check the Makefile, api/package.json and frontend/package.json. Include Codespaces make commands and
+the architecture (link to app/docs/architecture.md) and the main code conventions.
+Check the app/Makefile, app/api/package.json and app/frontend/package.json. Include Codespaces make commands and
 Windows PowerShell npm.cmd equivalents, all run from the repo root. Use API-only test commands.
 Max 40 lines. Don't change any other file.
 Describe the app only; ignore the labs/ folder.
 ```
 1. **Keep** the change, then open the file.
-2. Check its commands against the [Makefile](../Makefile), [API scripts](../api/package.json), [frontend scripts](../frontend/package.json) and [setup command table](01-setup.md#local-windows-equivalents-for-lab-commands). It should cover both environments. For API tests, use **Codespaces:** `make test-api`; **Windows PowerShell:** `npm.cmd --prefix .\api test`. Tests keep watching for changes; press **q** to quit.
+2. Check its commands against the [app/Makefile](../app/Makefile), [API scripts](../app/api/package.json), [frontend scripts](../app/frontend/package.json) and [setup command table](01-setup.md#local-windows-equivalents-for-lab-commands). It should cover both environments. For API tests, use **Codespaces:** `make -C app test-api`; **Windows PowerShell:** `npm.cmd --prefix .\app\api test`. Tests keep watching for changes; press **q** to quit.
 3. Fix anything that's made up, because wrong instructions mislead every future chat.
 
 > In the *Local* session type, `/init` does the same job. Typing the request works everywhere.
 
 ### A3. Add the team rule (⏱ 3 min)
-<!-- 1. Open [demo/walkthroughs/copilot/copilot-in-ide.md](../demo/walkthroughs/copilot/copilot-in-ide.md).
+<!-- 1. Open [app/demo/walkthroughs/copilot/copilot-in-ide.md](../app/demo/walkthroughs/copilot/copilot-in-ide.md).
 2. Find **"Demo: Custom Instructions and Repository Configuration"** → **Option 2: Update the custom instructions file by hand, adding these additional guidelines**.
 3. Copy the **"Additional Guidelines for REST APIs"** block. -->
 1. Paste this at the **end** of `.github/copilot-instructions.md` and save.
 
 ```markdown
 ## Team rules for the API
-- Observability: use our internal TAO library for all logging, metrics and tracing. See [TAO guide](../docs/tao.md).
+- Observability: use our internal TAO library for all logging, metrics and tracing. See [TAO guide](../app/docs/tao.md).
 - TAO is provided by our platform: never install it or add it to package.json.
 - Don't introduce other logging or metrics libraries.
 ```
@@ -153,7 +153,7 @@ description: <What this skill does and when to use it, in 1-3 sentences>
 ### B4. Check (⏱ 1 min)
 `api-endpoint` now appears in the Skills list and in the `/` menu.
 
-**Required before B5:** in [SKILL.md](../.github/skills/api-endpoint/SKILL.md) and [database-conventions.md](../.github/skills/api-endpoint/references/database-conventions.md), replace every `api/sql/` path with `api/database/`. Migrations belong in [api/database/migrations/](../api/database/migrations/) and seed data in [api/database/seed/](../api/database/seed/). Correct the guidance only; do not move existing database files.
+**Required before B5:** in [SKILL.md](../.github/skills/api-endpoint/SKILL.md) and [database-conventions.md](../.github/skills/api-endpoint/references/database-conventions.md), replace every `app/api/sql/` path with `app/api/database/`. Migrations belong in [app/api/database/migrations/](../app/api/database/migrations/) and seed data in [app/api/database/seed/](../app/api/database/seed/). Correct the guidance only; do not move existing database files.
 
 ### B5. Use it (⏱ 10 min)
 Start a new chat (opens Agent mode by default) and send:
@@ -161,10 +161,10 @@ Start a new chat (opens Agent mode by default) and send:
 Add a new API endpoint for a new Entity called 'DeliveryVehicle', with full CRUD endpoints. Each vehicle belongs to a branch.
 ```
 Watch for the skill being loaded: it shows up in the references or tool calls of the response. Then tick off the skill's own checklist:
-- [ ] model in [api/src/models/](../api/src/models/)
-- [ ] repository in [api/src/repositories/](../api/src/repositories/)
-- [ ] route in [api/src/routes/](../api/src/routes/), registered in [api/src/index.ts](../api/src/index.ts)
-- [ ] migration in [api/database/migrations/](../api/database/migrations/) and seed data in [api/database/seed/](../api/database/seed/)
+- [ ] model in [app/api/src/models/](../app/api/src/models/)
+- [ ] repository in [app/api/src/repositories/](../app/api/src/repositories/)
+- [ ] route in [app/api/src/routes/](../app/api/src/routes/), registered in [app/api/src/index.ts](../app/api/src/index.ts)
+- [ ] migration in [app/api/database/migrations/](../app/api/database/migrations/) and seed data in [app/api/database/seed/](../app/api/database/seed/)
 - [ ] unit tests
 
 **Verify:**
@@ -173,8 +173,8 @@ Watch for the skill being loaded: it shows up in the references or tool calls of
 
    | Task | Codespaces | Windows PowerShell |
    |---|---|---|
-   | API tests | `make test-api` | `npm.cmd --prefix .\api test` |
-   | Start API | `make dev-api` | `npm.cmd --prefix .\api run dev` |
+   | API tests | `make -C app test-api` | `npm.cmd --prefix .\app\api test` |
+   | Start API | `make -C app dev-api` | `npm.cmd --prefix .\app\api run dev` |
 
 3. Open Swagger and look for the DeliveryVehicle endpoints:
    - **Codespaces:** open **Ports** → **3000** → add `/api-docs` to the forwarded URL.
@@ -187,7 +187,7 @@ For automated agent test runs, use the [single-run commands](01-setup.md#local-w
 |---|---|
 | Backend developer | Does the route follow the existing pattern? Do the tests pass? |
 | Frontend developer | Are the Swagger docs and model types complete? |
-| Data engineer | Check that the migration and seed are under [api/database/](../api/database/) and follow the corrected [database conventions](../.github/skills/api-endpoint/references/database-conventions.md). |
+| Data engineer | Check that the migration and seed are under [app/api/database/](../app/api/database/) and follow the corrected [database conventions](../.github/skills/api-endpoint/references/database-conventions.md). |
 | Platform / DevOps | Do the API tests pass using your environment's command above? If watching for changes, press **q** to quit. |
 
 ### B6. Compare (⏱ 2 min)
@@ -203,7 +203,7 @@ The header and corrected database paths now differ. Compare your description wit
 ---
 
 ## Extensions (if you finish early)
-- **Write a tiny skill of your own.** Choose **Agent** and send: `Create a skill in .github/skills/tao-metrics/ that explains how to add a TAO metric to a route, based on docs/tao.md. SKILL.md max 40 lines, with a name and description header.` (In the *Local* session type, `/create-skill` helps.)
+- **Write a tiny skill of your own.** Choose **Agent** and send: `Create a skill in .github/skills/tao-metrics/ that explains how to add a TAO metric to a route, based on app/docs/tao.md. SKILL.md max 40 lines, with a name and description header.` (In the *Local* session type, `/create-skill` helps.)
 
 ## Think about this for the wrap-up
 Where does each of these belong: **instructions**, a **skill** or an **agent**?

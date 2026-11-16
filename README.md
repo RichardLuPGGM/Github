@@ -26,6 +26,8 @@ Our shared application is **OctoCAT Supply**, a sample supply-chain app, not a P
 
 Both options use the same app and labs, with **3000** for the API and **5137** for the website. Codespaces uses forwarded URLs; local users open `localhost`. The local instructions use Windows PowerShell and npm commands instead of the labs' `make` shortcuts.
 
+Open the **repository root** in VS Code: [app/](./app/) contains the application and [labs/](./labs/) contains the exercises. Repository-wide configuration stays at the root so GitHub, Codespaces and Copilot can discover it.
+
 **Version baseline:** use the latest **Node.js 24.x** release and the committed dependency lockfiles. Node 26 is not the workshop baseline.
 
 Complete the app and Copilot checks before the training. Both options require repo access and a working Copilot license; local setup also needs permission to install tools and download packages. If installation or enterprise network restrictions prevent a working setup, contact IT or ask a facilitator about pairing with someone whose environment is ready.
@@ -56,19 +58,20 @@ Follow the [labs index](./labs/README.md) for the schedule and step-by-step exer
 
 | Folder | Contents |
 |---|---|
+| [app/](./app/) | Application code, build commands, documentation, infrastructure and legacy demos |
 | [labs/](./labs/) | Hands-on workshop exercises |
-| [api/](./api/) | Express REST API and SQLite database |
-| [frontend/](./frontend/) | React website |
-| [docs/](./docs/) | Architecture, database, build and deployment guides |
-| [infra/](./infra/) | Infrastructure and deployment scripts |
-| [demo/](./demo/) | walkthroughs from the original sample |
-| [.github/](./.github/) | Copilot and GitHub configuration |
-| [.devcontainer/](./.devcontainer/) | Codespaces environment setup |
-| [.vscode/](./.vscode/) | VS Code tasks, debug and workspace configuration |
+| [app/api/](./app/api/) | Express REST API and SQLite database |
+| [app/frontend/](./app/frontend/) | React website |
+| [app/docs/](./app/docs/) | Architecture, database, build and deployment guides |
+| [app/infra/](./app/infra/) | Infrastructure and deployment scripts |
+| [app/demo/](./app/demo/) | walkthroughs from the original sample |
+| [.github/](.github/) | Copilot and GitHub configuration |
+| [.devcontainer/](.devcontainer/) | Codespaces environment setup |
+| [.vscode/](.vscode/) | VS Code tasks, debug and workspace configuration |
 
 ## The app
 
-![OctoCAT Supply](./frontend/public/hero.png)
+![OctoCAT Supply](./app/frontend/public/hero.png)
 
 OctoCAT Supply is a sample supply chain management app for managing products, suppliers, branches, orders and deliveries. Its React website uses an Express API backed by SQLite, with Swagger documentation for exploring the API.
 
@@ -97,7 +100,7 @@ erDiagram
 After automatic setup finishes, run this from the repo root in your codespace:
 
 ```bash
-make dev
+make -C app dev
 ```
 
 Open the **Ports** tab and open the forwarded ports:
@@ -121,10 +124,10 @@ For the first setup, run these **one at a time** from the repo root in PowerShel
 ```powershell
 node --version
 npm.cmd --version
-npm.cmd --prefix .\api ci --include=optional
-npm.cmd --prefix .\frontend ci --include=optional
-npm.cmd --prefix .\api run build
-npm.cmd --prefix .\frontend run build
+npm.cmd --prefix .\app\api ci --include=optional
+npm.cmd --prefix .\app\frontend ci --include=optional
+npm.cmd --prefix .\app\api run build
+npm.cmd --prefix .\app\frontend run build
 ```
 
 `ci` cleanly reinstalls the locked dependencies, including the correct platform-specific packages, without changing your source files or lockfiles. `npm.cmd` avoids PowerShell's `npm.ps1` execution-policy issue.
@@ -134,13 +137,13 @@ Then open **two PowerShell terminals at the repo root**.
 **Terminal 1 - API:**
 
 ```powershell
-npm.cmd --prefix .\api run dev
+npm.cmd --prefix .\app\api run dev
 ```
 
 **Terminal 2 - website:**
 
 ```powershell
-npm.cmd --prefix .\frontend run dev
+npm.cmd --prefix .\app\frontend run dev
 ```
 
 Open http://localhost:5137 for the website and http://localhost:3000/api-docs for Swagger. The API initializes and seeds SQLite automatically; no separate database server is needed. If Node.js or npm is not recognised, follow the [PowerShell PATH troubleshooting](./labs/01-setup.md#nodejs-installed-but-not-recognised-in-powershell).
@@ -153,16 +156,16 @@ The following `make` shortcuts are for Codespaces. Local Windows users do not ne
 
 | Command | Purpose |
 |---|---|
-| `make dev` | Start the API and website |
-| `make dev-api` | Start only the API |
-| `make dev-frontend` | Start only the website |
-| `make test-api` | Run the API test suite in watch mode; press **q** to quit |
-| `make help` | List available Make targets |
-| `make install` | Install dependencies (already done during setup) |
-| `make build` | Build the API and website |
-| `make db-init` | Apply pending database migrations |
-| `make db-seed` | Apply migrations and seed sample data |
-| `make clean` | Remove build outputs, dependencies and database files at the API folder root |
+| `make -C app dev` | Start the API and website |
+| `make -C app dev-api` | Start only the API |
+| `make -C app dev-frontend` | Start only the website |
+| `make -C app test-api` | Run the API test suite in watch mode; press **q** to quit |
+| `make -C app help` | List available Make targets |
+| `make -C app install` | Install dependencies (already done during setup) |
+| `make -C app build` | Build the API and website |
+| `make -C app db-init` | Apply pending database migrations |
+| `make -C app db-seed` | Apply migrations and seed sample data |
+| `make -C app clean` | Remove build outputs, dependencies and database files at the API folder root |
 
 **Database commands (optional)**
 
@@ -170,28 +173,28 @@ API startup already applies migrations and seeds sample data. To run these manua
 
 In Codespaces:
 ```bash
-npm --prefix api run db:migrate
-npm --prefix api run db:seed
+npm --prefix app/api run db:migrate
+npm --prefix app/api run db:seed
 ```
 
 In local Windows PowerShell:
 ```powershell
-npm.cmd --prefix .\api run db:migrate
-npm.cmd --prefix .\api run db:seed
+npm.cmd --prefix .\app\api run db:migrate
+npm.cmd --prefix .\app\api run db:seed
 ```
 
-The default database is `api/data/app.db` (override with `DB_FILE`). WAL mode and foreign keys default to enabled (`DB_ENABLE_WAL` and `DB_FOREIGN_KEYS`).
+The default database is `app/api/data/app.db` (override with `DB_FILE`). WAL mode and foreign keys default to enabled (`DB_ENABLE_WAL` and `DB_FOREIGN_KEYS`).
 
 **VS Code tasks**
 
-Use **Tasks: Run Task** in the Command Palette, then **Build All**, **Build API** or **Build Frontend**. The **Start API & Frontend** debug configuration calls a root npm script that is not defined; use the development commands above for your environment instead.
+Use **Tasks: Run Task** in the Command Palette, then **Build All**, **Build API** or **Build Frontend**. These tasks use each project's npm build script on Windows and in Codespaces. The **Start API & Frontend** debug compound starts both projects from their respective application folders.
 
 ## Docs
 
-- [Architecture](./docs/architecture.md)
-- [SQLite integration](./docs/sqlite-integration.md)
-- [Build and test guide](./docs/build.md)
-- [Deployment](./docs/deployment.md)
+- [Architecture](./app/docs/architecture.md)
+- [SQLite integration](./app/docs/sqlite-integration.md)
+- [Build and test guide](./app/docs/build.md)
+- [Deployment](./app/docs/deployment.md)
 
 ## Credits
 

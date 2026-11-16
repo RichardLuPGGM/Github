@@ -16,7 +16,7 @@ A **codespace** gives you VS Code, this repo and its tools in the cloud, accessi
 
 1. Use the GitHub account with your Copilot licence to [open this repo in Codespaces](https://codespaces.new/shireendan/octocat-supply/tree/workshop).
 2. Keep branch `workshop`, choose at least **4 cores and 8 GB RAM**, then select **Create codespace**.
-3. Wait for `make install && make build` to finish installing dependencies and building the app.
+3. Wait for `make -C app install && make -C app build` to finish installing dependencies and building the app.
 4. Confirm the status bar shows `workshop`, or run `git branch --show-current` in the terminal. If `workshop` isn't listed, follow [branch recovery](#recovery-workshop-branch-missing).
 
 Returning? Use the [resume link](https://codespaces.new/shireendan/octocat-supply/tree/workshop?quickstart=1) or [your codespaces](https://github.com/codespaces). Browser and desktop VS Code both work.
@@ -45,7 +45,7 @@ Run Node/npm directly in Windows on either your **laptop or Windows DevBox**, wi
    Set-Location .\octocat-supply
    code .
    ```
-   Already cloned? Open that folder in VS Code instead; do not clone over it or discard existing changes. All remaining local commands start from the **repo root**, the folder containing `api` and `frontend`, unless stated otherwise.
+   Already cloned? Open that folder in VS Code instead; do not clone over it or discard existing changes. All remaining local commands start from the **repo root**, the folder containing `app` and `labs`, unless stated otherwise.
 4. In VS Code, choose **Terminal > New Terminal** and use PowerShell. **Before npm installation**, prepare certificate trust if this managed machine needs company certificates or reports `unable to get local issuer certificate`. If your organisation's approved certificates are already trusted by Windows, run:
    ```powershell
    $env:NODE_USE_SYSTEM_CA = "1"
@@ -53,10 +53,10 @@ Run Node/npm directly in Windows on either your **laptop or Windows DevBox**, wi
    This uses Windows' trusted certificates without disabling HTTPS verification. It applies only to this terminal and its child processes; repeat in a new terminal when needed. It does not overwrite existing `NODE_OPTIONS`. Unaffected Windows machines can skip this step, and it is not a Codespaces requirement. If errors persist, follow [enterprise certificate trust](#enterprise-certificate-trust) before continuing.
 5. In that same terminal, stop any running app servers before reinstalling dependencies. Run these commands **one at a time**, resolving any error before moving to the next:
    ```powershell
-   npm.cmd --prefix .\api ci --include=optional
-   npm.cmd --prefix .\frontend ci --include=optional
-   npm.cmd --prefix .\api run build
-   npm.cmd --prefix .\frontend run build
+   npm.cmd --prefix .\app\api ci --include=optional
+   npm.cmd --prefix .\app\frontend ci --include=optional
+   npm.cmd --prefix .\app\api run build
+   npm.cmd --prefix .\app\frontend run build
    ```
 
    `--prefix` selects the project without changing folders. `ci` replaces its installed dependencies using the locked versions, and `--include=optional` includes platform-specific packages such as Rollup. Your source files and lockfiles are unchanged. This clean install also replaces incompatible packages left from another operating system.
@@ -97,13 +97,13 @@ The **API** handles OctoCAT's business records. **Swagger** is its interactive d
 
 1. In a terminal at the repo root, run:
    ```bash
-   make dev
+   make -C app dev
    ```
 2. Wait for `Database initialized successfully`, `Server is running on port 3000` and the website's Vite startup message on port **5137**.
 3. In **Ports**, open **3000**, then add **`/api-docs`** to the browser URL. Look for *Branches* and *Orders* in Swagger.
 4. In **Ports**, open **5137** and check that the product catalog loads.
 
-If you only need the API for a lab, use `make dev-api` instead of `make dev`.
+If you only need the API for a lab, use `make -C app dev-api` instead of `make -C app dev`.
 
 ### Local Node.js and npm
 
@@ -111,12 +111,12 @@ Use PowerShell and a browser on the same Windows laptop or DevBox. If the app ru
 
 1. In **Terminal 1**, at the repo root, start the API:
    ```powershell
-   npm.cmd --prefix .\api run dev
+   npm.cmd --prefix .\app\api run dev
    ```
    Wait for `Database initialized successfully` and `Server is running on port 3000`.
 2. Open **Terminal > New Terminal**. In **Terminal 2**, also at the repo root, start the website:
    ```powershell
-   npm.cmd --prefix .\frontend run dev
+   npm.cmd --prefix .\app\frontend run dev
    ```
 3. Open http://localhost:3000/api-docs and look for *Branches* and *Orders* in Swagger.
 4. Open http://localhost:5137 and check that the product catalog loads. Local users do not need a forwarded URL or the Ports tab.
@@ -129,28 +129,28 @@ Run these from the repo root. When a lab says **Ports** then **3000**, use http:
 
 | Codespaces command in a lab | Local Windows PowerShell |
 |---|---|
-| `make dev-api` | `npm.cmd --prefix .\api run dev` |
-| `make dev-frontend` | `npm.cmd --prefix .\frontend run dev` |
-| `make dev` | Run the two commands above in separate terminals |
-| `make install` | `npm.cmd --prefix .\api install`, then `npm.cmd --prefix .\frontend install` |
-| `make build` | `npm.cmd --prefix .\api run build`, then `npm.cmd --prefix .\frontend run build` |
-| `make build-api` | `npm.cmd --prefix .\api run build` |
-| `make build-frontend` | `npm.cmd --prefix .\frontend run build` |
-| `make test-api` | `npm.cmd --prefix .\api test` |
-| `make lint` | `npm.cmd --prefix .\api run lint`, then `npm.cmd --prefix .\frontend run lint` |
+| `make -C app dev-api` | `npm.cmd --prefix .\app\api run dev` |
+| `make -C app dev-frontend` | `npm.cmd --prefix .\app\frontend run dev` |
+| `make -C app dev` | Run the two commands above in separate terminals |
+| `make -C app install` | `npm.cmd --prefix .\app\api install`, then `npm.cmd --prefix .\app\frontend install` |
+| `make -C app build` | `npm.cmd --prefix .\app\api run build`, then `npm.cmd --prefix .\app\frontend run build` |
+| `make -C app build-api` | `npm.cmd --prefix .\app\api run build` |
+| `make -C app build-frontend` | `npm.cmd --prefix .\app\frontend run build` |
+| `make -C app test-api` | `npm.cmd --prefix .\app\api test` |
+| `make -C app lint` | `npm.cmd --prefix .\app\api run lint`, then `npm.cmd --prefix .\app\frontend run lint` |
 
 The labs verify API features using the API test suite. Tests watch for changes; press **q** to quit. For a single run, which is also preferable when an agent runs tests, use:
 
 **Codespaces:**
 
 ```bash
-npm --prefix api test -- --run
+npm --prefix app/api test -- --run
 ```
 
 **Windows PowerShell:**
 
 ```powershell
-npm.cmd --prefix .\api test -- --run
+npm.cmd --prefix .\app\api test -- --run
 ```
 
 The initial local setup uses `ci` for a clean install from the lockfiles. Use `install` when deliberately changing dependencies, so the matching lockfile is updated.
@@ -231,7 +231,7 @@ If a facilitator asks you to compare working setups, run these from the repo roo
 ```powershell
 node --version
 npm.cmd --version
-npm.cmd --prefix .\api ls better-sqlite3
+npm.cmd --prefix .\app\api ls better-sqlite3
 ```
 
 These commands only display the installed Node.js, npm and Node-to-SQLite connector versions; they do not change anything. Share the output when troubleshooting with a facilitator. You do not need to record it for normal setup.
@@ -250,7 +250,7 @@ If IT provides a PEM-format CA bundle, use its actual file path. For example, fr
 
 ```powershell
 $env:NODE_EXTRA_CA_CERTS = "C:\certs\company-ca-bundle.pem"
-npm.cmd --prefix .\api ci --include=optional
+npm.cmd --prefix .\app\api ci --include=optional
 ```
 
 The path above is an example, not a file included in this repo. Use only the approved bundle supplied by IT. Node reads it when a new process starts, and it can be used alongside `NODE_USE_SYSTEM_CA`. Follow IT's proxy or internal-mirror instructions where required; do not disable certificate verification or bypass organisation controls.

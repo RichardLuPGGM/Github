@@ -72,11 +72,11 @@ Which files would change, and in which order? Don't write code.
 ## Part 2: Code completion and inline chat (⏱ 5 min)
 
 **2.1** Open these three files and keep them open, because open files give Copilot context:
-- [api/src/models/order.ts](../api/src/models/order.ts)
-- [api/src/repositories/ordersRepo.ts](../api/src/repositories/ordersRepo.ts)
-- [api/src/routes/order.ts](../api/src/routes/order.ts)
+- [app/api/src/models/order.ts](../app/api/src/models/order.ts)
+- [app/api/src/repositories/ordersRepo.ts](../app/api/src/repositories/ordersRepo.ts)
+- [app/api/src/routes/order.ts](../app/api/src/routes/order.ts)
 
-**2.2** In [ordersRepo.ts](../api/src/repositories/ordersRepo.ts), click on an empty line **between two existing `async` methods**. Don't use the very top or bottom of the class. Type:
+**2.2** In [ordersRepo.ts](../app/api/src/repositories/ordersRepo.ts), click on an empty line **between two existing `async` methods**. Don't use the very top or bottom of the class. Type:
 ```
 // Count orders by branch
 ```
@@ -89,7 +89,7 @@ No suggestion? Wait a second, or start typing `async countBy` and watch.
 
 **2.5** (Optional) Right-click the method → **Copilot** → **Explain**.
 
-✅ [ordersRepo.ts](../api/src/repositories/ordersRepo.ts) now has a method that counts orders for a branch.
+✅ [ordersRepo.ts](../app/api/src/repositories/ordersRepo.ts) now has a method that counts orders for a branch.
 
 ---
 
@@ -109,8 +109,8 @@ Don't run, deploy or test anything yet.
 
 **3.3** Try it:
 1. Start the API from the repo root:
-   - **Codespaces:** `make dev-api`
-   - **Windows PowerShell:** `npm.cmd --prefix .\api run dev`
+   - **Codespaces:** `make -C app dev-api`
+   - **Windows PowerShell:** `npm.cmd --prefix .\app\api run dev`
 2. Open Swagger:
    - **Codespaces:** open **Ports** → **3000** → add `/api-docs` to the forwarded URL.
    - **Windows:** open http://localhost:3000/api-docs in a browser on the laptop or DevBox running the API.
@@ -126,7 +126,7 @@ Don't run, deploy or test anything yet.
 ## Part 4: Plan, to think before you build (⏱ 7 min)
 
 **4.1** Start a new chat, click on the message icon at the bottom, and choose **Plan**.
-**4.2** Attach the design: drag [docs/design/cart.png](../docs/design/cart.png) from the Explorer into the chat (or use **Add Context** → **Files**).
+**4.2** Attach the design: drag [app/docs/design/cart.png](../app/docs/design/cart.png) from the Explorer into the chat (or use **Add Context** → **Files**).
 **4.3** Send:
 ```
 Using the attached design, plan a simple cart for the website: a cart icon in the navigation bar
@@ -154,7 +154,7 @@ F1 has no answer key, because every endpoint will look a little different. Compa
 Nothing later today depends on F1. Keep your changes, or discard them with **Source Control** → **…** → **Discard All Changes**.
 
 ## Extensions (if you finish early)
-- Agent: `Write unit tests for countByBranch following the style of the existing repository tests.` Then run the API tests from the repo root: **Codespaces:** `make test-api`; **Windows PowerShell:** `npm.cmd --prefix .\api test`. Tests keep watching for changes; press **q** to quit. For a single run, use the [setup guide's test commands](01-setup.md#local-windows-equivalents-for-lab-commands).
+- Agent: `Write unit tests for countByBranch following the style of the existing repository tests.` Then run the API tests from the repo root: **Codespaces:** `make -C app test-api`; **Windows PowerShell:** `npm.cmd --prefix .\app\api test`. Tests keep watching for changes; press **q** to quit. For a single run, use the [setup guide's test commands](01-setup.md#local-windows-equivalents-for-lab-commands).
 - Send the 1.2 prompt again with a different model from the model picker. What changes?
 
 ## Think about this for the wrap-up

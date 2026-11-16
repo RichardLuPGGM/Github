@@ -23,7 +23,7 @@ Routes (Express.js) → Repository (Data Access) → SQLite Database
 
 ### Step 1: Define the Model
 
-Create a TypeScript interface in `api/src/models/{entity}.ts` with Swagger schema documentation.
+Create a TypeScript interface in `app/api/src/models/{entity}.ts` with Swagger schema documentation.
 
 **Pattern:**
 ```typescript
@@ -59,7 +59,7 @@ export interface EntityName {
 
 ### Step 2: Create the Repository
 
-Create `api/src/repositories/{entityName}sRepo.ts` following the repository pattern.
+Create `app/api/src/repositories/{entityName}sRepo.ts` following the repository pattern.
 
 **Required imports:**
 ```typescript
@@ -162,7 +162,7 @@ export async function getEntityNamesRepository(isTest: boolean = false): Promise
 
 ### Step 3: Create the Route
 
-Create `api/src/routes/{entityName}.ts` with Swagger documentation and Express handlers.
+Create `app/api/src/routes/{entityName}.ts` with Swagger documentation and Express handlers.
 
 **Swagger documentation pattern (at top of file):**
 ```typescript
@@ -334,7 +334,7 @@ export default router;
 
 ### Step 4: Register the Route
 
-In `api/src/index.ts`, add:
+In `app/api/src/index.ts`, add:
 ```typescript
 import entityNameRoutes from './routes/entityName';
 // ...
@@ -347,12 +347,12 @@ See `references/database-conventions.md` for migration file conventions.
 
 ### Step 6: Create Seed Data
 
-**Always create seed data** for new entities in `api/sql/seed/{NNN}_{entity_names}.sql`.
+**Always create seed data** for new entities in `app/api/sql/seed/{NNN}_{entity_names}.sql`.
 
 **Seed file naming convention:**
 - Use the next sequential number (e.g., `005_categories.sql`)
 - Use snake_case plural entity name
-- Place in `api/sql/seed/` directory
+- Place in `app/api/sql/seed/` directory
 
 **Seed data best practices:**
 ```sql
@@ -387,7 +387,7 @@ INSERT INTO entity_names (entity_name_id, name, supplier_id, stock_quantity) VAL
 
 ### Step 7: Create Unit Tests
 
-**Always create unit tests** for new repositories in `api/src/repositories/{entity}sRepo.test.ts`.
+**Always create unit tests** for new repositories in `app/api/src/repositories/{entity}sRepo.test.ts`.
 
 See `references/testing-patterns.md` for:
 - Complete test file structure and patterns
@@ -437,7 +437,7 @@ Available helpers from `utils/sql.ts`:
 ## File Locations
 
 ```
-api/src/
+app/api/src/
 ├── models/{entity}.ts          # TypeScript interface + Swagger schema
 ├── repositories/{entity}sRepo.ts  # Data access layer
 ├── routes/{entity}.ts          # Express routes + Swagger docs
@@ -451,14 +451,14 @@ api/src/
 
 When creating a new API endpoint, ensure you complete ALL steps:
 
-- [ ] **Model** (`api/src/models/{entity}.ts`) - TypeScript interface + Swagger schema
-- [ ] **Repository** (`api/src/repositories/{entity}sRepo.ts`) - Data access with all CRUD methods
-- [ ] **Route** (`api/src/routes/{entity}.ts`) - Express handlers + Swagger docs
-- [ ] **Register** (`api/src/index.ts`) - Add route to Express app
-- [ ] **Migration** (`api/sql/migrations/{NNN}_{description}.sql`) - CREATE TABLE statement
-- [ ] **Seed Data** (`api/sql/seed/{NNN}_{entity_names}.sql`) - 3-5 realistic examples
-- [ ] **Unit Tests** (`api/src/repositories/{entity}sRepo.test.ts`) - All CRUD operations, edge cases, errors
-- [ ] **Route Tests** (`api/src/routes/{entity}.test.ts`) - Integration tests for HTTP endpoints
+- [ ] **Model** (`app/api/src/models/{entity}.ts`) - TypeScript interface + Swagger schema
+- [ ] **Repository** (`app/api/src/repositories/{entity}sRepo.ts`) - Data access with all CRUD methods
+- [ ] **Route** (`app/api/src/routes/{entity}.ts`) - Express handlers + Swagger docs
+- [ ] **Register** (`app/api/src/index.ts`) - Add route to Express app
+- [ ] **Migration** (`app/api/sql/migrations/{NNN}_{description}.sql`) - CREATE TABLE statement
+- [ ] **Seed Data** (`app/api/sql/seed/{NNN}_{entity_names}.sql`) - 3-5 realistic examples
+- [ ] **Unit Tests** (`app/api/src/repositories/{entity}sRepo.test.ts`) - All CRUD operations, edge cases, errors
+- [ ] **Route Tests** (`app/api/src/routes/{entity}.test.ts`) - Integration tests for HTTP endpoints
 
 **Do not skip seed data or unit tests** - they are required for all new endpoints.
 

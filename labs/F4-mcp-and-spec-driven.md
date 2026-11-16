@@ -98,9 +98,9 @@ In the same chat, choose **tdd-planner** in the agent picker and send:
 Add an endpoint that returns all orders for a given branch ID.
 ```
 1. The planner researches the code first, so give it a minute.
-2. Look for a plan in `docs/tdd-plans/`; if it wasn't saved, use the fallback below. Open the saved file and read the **Acceptance Criteria** and **Test Specifications**.
+2. Look for a plan in `app/docs/tdd-plans/`; if it wasn't saved, use the fallback below. Open the saved file and read the **Acceptance Criteria** and **Test Specifications**.
 
-> **No file in `docs/tdd-plans/`?** Choose **Agent** and send: `Save that plan as docs/tdd-plans/orders-by-branch.md. Don't change anything else.`
+> **No file in `app/docs/tdd-plans/`?** Choose **Agent** and send: `Save that plan as app/docs/tdd-plans/orders-by-branch.md. Don't change anything else.`
 
 ### 2.2 Review against Learn (⏱ 3 min)
 In the same chat, choose **Agent** and send:
@@ -117,9 +117,9 @@ Open the plan file and **edit it by hand**: accept or reject each suggestion. Ch
 ### 2.4 Red: tests first (⏱ 4 min)
 In the same chat, choose **tdd-red** and send (replace `<plan-file>.md` with your saved plan's filename):
 ```
-Implement the failing tests for the plan in docs/tdd-plans/<plan-file>.md. Use the file, because I edited it. Only create test files, then run them.
+Implement the failing tests for the plan in app/docs/tdd-plans/<plan-file>.md. Use the file, because I edited it. Only create test files, then run them.
 ```
-1. Review the new test file (for example `api/src/routes/order.test.ts`) and choose **Keep**.
+1. Review the new test file (for example `app/api/src/routes/order.test.ts`) and choose **Keep**.
 2. The tests should **fail because the feature doesn't exist yet**, for example with a 404. A typo in the test is the wrong reason: tell tdd-red.
 
 If the agent needs help running tests, use the [setup guide's single-run API test command](01-setup.md#local-windows-equivalents-for-lab-commands) for your environment. A missing command or dependency is not the expected red-phase failure.
@@ -129,7 +129,7 @@ If the agent needs help running tests, use the [setup guide's single-run API tes
 ### 2.5 Green: make them pass (⏱ 4 min)
 In the same chat, choose **tdd-green** and send, using the same filename:
 ```
-Implement the code to make these tests pass, using docs/tdd-plans/<plan-file>.md as the spec.
+Implement the code to make these tests pass, using app/docs/tdd-plans/<plan-file>.md as the spec.
 Don't change the tests.
 ```
 Review every change with **Keep** or **Undo**:
@@ -141,8 +141,8 @@ From the repo root, use the commands for your environment:
 
 | Task | Codespaces | Windows PowerShell |
 |---|---|---|
-| API tests | `make test-api` | `npm.cmd --prefix .\api test` |
-| Start API | `make dev-api` | `npm.cmd --prefix .\api run dev` |
+| API tests | `make -C app test-api` | `npm.cmd --prefix .\app\api test` |
+| Start API | `make -C app dev-api` | `npm.cmd --prefix .\app\api run dev` |
 
 1. Run the API tests. Check that your new and existing API tests pass, then press **q** to quit watch mode. For a single run instead, use the [setup guide's single-run commands](01-setup.md#local-windows-equivalents-for-lab-commands).
 2. Start the API, then open Swagger:

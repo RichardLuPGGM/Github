@@ -60,7 +60,7 @@ Start a new chat, choose **Agent** and send:
 Fill in .github/agents/api-specialist.agent.md as a custom agent for this repository:
 - Header: name "API Specialist" and a one-line description.
 - Body: the agent's role, a step-by-step workflow for adding or changing API endpoints, and its rules.
-- Base it on docs/architecture.md and .github/instructions/api.instructions.md.
+- Base it on app/docs/architecture.md and .github/instructions/api.instructions.md.
 - Max 50 lines. Only edit this one file.
 ```
 1. **Keep** the change, then read the file. Would you trust this colleague?
@@ -129,10 +129,10 @@ Open a file from your area:
 
 | Role | File |
 |---|---|
-| Backend developer | [api/src/routes/order.ts](../api/src/routes/order.ts) |
-| Frontend developer | [frontend/src/components/Login.tsx](../frontend/src/components/Login.tsx) or [Navigation.tsx](../frontend/src/components/Navigation.tsx) |
-| Data engineer | any file in [api/database/migrations/](../api/database/migrations/) |
-| Platform / DevOps | [infra/container-apps.bicep](../infra/container-apps.bicep), [api/Dockerfile](../api/Dockerfile) or [docker-compose.yml](../docker-compose.yml) |
+| Backend developer | [app/api/src/routes/order.ts](../app/api/src/routes/order.ts) |
+| Frontend developer | [app/frontend/src/components/Login.tsx](../app/frontend/src/components/Login.tsx) or [Navigation.tsx](../app/frontend/src/components/Navigation.tsx) |
+| Data engineer | any file in [app/api/database/migrations/](../app/api/database/migrations/) |
+| Platform / DevOps | [app/infra/container-apps.bicep](../app/infra/container-apps.bicep), [app/api/Dockerfile](../app/api/Dockerfile) or [docker-compose.yml](../app/docker-compose.yml) |
 
 Start a new chat → choose **my-reviewer** in the agent picker → send:
 ```
