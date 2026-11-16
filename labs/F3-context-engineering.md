@@ -194,7 +194,7 @@ For automated agent test runs, use the [single-run commands](01-setup.md#local-w
 ```bash
 git diff origin/main -- .github/skills/api-endpoint/SKILL.md
 ```
-The header and corrected database paths now differ. Compare your description with OctoCAT's; the path corrections are expected.
+Compare your header with OctoCAT's and confirm that the database paths match the reference's `app/api/database/` paths. Your description can differ; check any other differences against the exercise requirements.
 
 **Catch up:** `git checkout origin/main -- .github/skills/api-endpoint/SKILL.md`, then repeat the required database-path correction above before using the skill again.
 
