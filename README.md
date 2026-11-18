@@ -1,74 +1,95 @@
-# Welcome to PGGM Innovation Day
+# 🧭 GitHub Copilot Advanced Workshop — Agentic Engineering in Practice
 
-**From an unfamiliar codebase to a working feature, with GitHub Copilot.**
+**Build, govern and automate an AI-assisted engineering platform** on a realistic (fictional) pension application.
 
-New team. New repository. Your first feature request. It's a familiar engineering challenge: before you can build anything, you need to understand the application, find the right files and learn the team's conventions. Today, we'll work through that journey together, with an AI teammate.
+![Your journey today](docs/images/workshop-journey.svg)
 
-This repo is your hands-on playground for the **Foundation Track**. We'll move from asking Copilot questions to working with agents that can plan, edit files and run tools. Along the way, you'll learn how to give them useful context and clear boundaries, while keeping the engineering decisions in your hands.
+> **Track:** Advanced (L300–L400) · **Format:** short talk ➜ hands-on lab, five times · **Environment:** GitHub Codespaces or the dev container
+> **App:** *Contoso Pension Platform* — a fictional pension fund. **Synthetic data only. Simplified, not real pension rules.**
 
-Whether you work on frontends, APIs, data or platforms, you're welcome here. You don't need to know this codebase or be a TypeScript expert: your job is to **describe, review and verify**. Where possible, pair up with someone from a different role and compare perspectives.
+---
 
-Our shared application is **OctoCAT Supply**, a sample supply-chain app, not a PGGM production system. [labs/](./labs/) contains the guided exercises; everything else is the application we'll explore and extend throughout the day.
+## ✅ Start here (10 minutes, before session A1)
 
-## Start here
-
-1. Sign in with the GitHub account that has your Copilot license and access to this repo.
-2. [Create your own repository from the participant template](./labs/01-setup.md#1-create-your-own-repository), named `octocat-supply-participants`. Select **Include all branches**.
-3. Use **native Windows Node.js/npm on your DevBox or laptop** as the primary option. GitHub Codespaces is the alternative if you cannot prepare that environment.
-4. Follow the [setup guide](./labs/01-setup.md) to install tools, open **your own repo**, run the app and learn the Chat controls before F1.
-5. Open the [labs README](./labs/README.md) for the schedule and context on how the exercises work.
-
-## Environment options
-
-- **Option 1 - Windows DevBox/local (recommended):** use the approved **Chocolatey/ProGet** installation on managed DevBoxes (**Node.js 26.x**), or **Node.js 24.x** on other Windows machines, with npm, Git and VS Code. Follow the [Windows setup](./labs/01-setup.md#option-a-local-nodejs-and-npm-windows), including [Node.js and Python installation](./labs/01-setup.md#install-nodejs-and-python). No Docker or `make` is required.
-- **Option 2 - GitHub Codespaces:** follow the [Codespaces setup](./labs/01-setup.md#option-b-github-codespaces) for a cloud workspace with tools, dependencies and builds prepared automatically.
-
-  Create the Codespace from **your own generated repo** on `workshop`, not from the shared template.
-
-Both options use the same app and labs, with **3000** for the API and **5137** for the website. Codespaces uses forwarded URLs; local users open `localhost`. The local instructions use Windows PowerShell and npm commands instead of the labs' `make` shortcuts.
-
-Open the **repository root** in VS Code: [app/](./app/) contains the application and [labs/](./labs/) contains the exercises. Repository-wide configuration stays at the root so GitHub, Codespaces and Copilot can discover it.
-
-**Node versions:** managed DevBoxes use **26.x** with the required [API SQLite update](./labs/01-setup.md#install-dependencies-and-build), which updates the API lockfile. Codespaces and the other Windows setup use **24.x**. Keep the appropriate lockfiles; do not delete them.
-
-Complete the app and Copilot checks before the training. Both options require repo access and a working Copilot license; local setup also needs permission to install tools and download packages. If installation or enterprise network restrictions prevent a working setup, contact IT or ask a facilitator about pairing with someone whose environment is ready.
-
-## Branches
-
-Your generated repo includes these branches when you select **Include all branches**:
-
-- **`workshop`:** where you work during the labs.
-- **`reference_solution`:** reference Copilot configuration for F2/F3, not finished F1/F4 features. Compare selected files; keep your work on `workshop`.
-
-## What we'll do together
-
-Start with the overview and setup guide, then follow one application through four steps from getting oriented to agentic development:
-
-| Guide or session | Purpose | What it covers |
+| Step | Do this | You should see |
 |---|---|---|
-| [Labs README](./labs/README.md) | Get the workshop context before you begin. | The schedule, how the labs work, lab conventions and where to get help. |
-| [Setup guide](./labs/01-setup.md) | Complete setup before F1. | Install tools, prepare a Windows DevBox/local workspace or Codespace, run the app and check Copilot. |
-| [Troubleshooting and reference](./labs/troubleshooting.md) | Use only if you need help or extra commands. | Certificate and PATH fixes, native-build requirements, test commands, branch recovery and reference-file comparisons. |
-| [F1. Prompting Fundamentals](./labs/F1-prompting-fundamentals.md) | Understand an unfamiliar repo and tackle your first ticket: count orders by branch. | Clear prompts, code completion, and choosing between Ask, Agent and Plan. |
-| [F2. Build Your Personal Agent](./labs/F2-build-your-personal-agent.md) | Give an AI teammate a focused role and clear boundaries. | A shared API Specialist and your own read-only review agent. |
-| [F3. Context Engineering in Practice](./labs/F3-context-engineering.md) | Help Copilot follow the team's conventions instead of guessing. | Reusable repository instructions, project context and skills. |
-| [F4. First Steps in Agentic Development](./labs/F4-mcp-and-spec-driven.md) | Take an orders-by-branch API feature from a specification to a working endpoint. | External documentation through Model Context Protocol (MCP), acceptance criteria, tests first and implementation. |
+| 1 | Click **Use this template → Create a new repository**. Owner: your account (or the org your coach tells you). Visibility: **Private**. | Your own copy of this repo |
+| 2 | In **your** repo: **Code → Codespaces → Create codespace on main** | A browser VS Code that builds for ~2 min |
+| 3 | Open it in **VS Code Desktop**: bottom-left **Codespaces** menu → **Open in VS Code Desktop** *(recommended — every agent feature works there)* | VS Code Desktop connected to the Codespace |
+| 4 | In the terminal: `npm run verify` | `✅ Ready for the workshop` |
+| 5 | Go to **[Lab 00 · Setup](labs/00-setup/README.md)** | — |
 
-The goal isn't just to generate code. It's to practise a workflow you can take back to your PGGM team: **understand, plan, provide context, build, review and verify**. You decide what success looks like, review the agent's changes and check that the tests and running application back up its claims.
+> 🆘 Something fails? Raise your hand — coaches walk around. Plan B is in [Lab 00 · Troubleshooting](labs/00-setup/README.md#-troubleshooting).
 
-Follow the [labs index](./labs/README.md) for the schedule and step-by-step exercises. Different Copilot outputs are expected; bring your questions, compare approaches and check the results together.
+---
 
-## What's where
+## 🗺️ Agenda and labs
 
-| Folder | Contents |
-|---|---|
-| [app/](./app/) | Application code, build commands, documentation, infrastructure and legacy demos |
-| [labs/](./labs/) | Hands-on workshop exercises |
-| [app/api/](./app/api/) | Express REST API and SQLite database |
-| [app/frontend/](./app/frontend/) | React website |
-| [app/docs/](./app/docs/) | Architecture, database, build and deployment guides |
-| [app/infra/](./app/infra/) | Infrastructure and deployment scripts |
-| [app/demo/](./app/demo/) | walkthroughs from the original sample |
-| [.github/](.github/) | Copilot and GitHub configuration |
-| [.devcontainer/](.devcontainer/) | Codespaces environment setup |
-| [.vscode/](.vscode/) | VS Code tasks, debug and workspace configuration |
+| # | Session | Level | Lab (do in this order) | You will build |
+|---|---|---|---|---|
+| 00 | Setup | — | [Lab 00 · Setup & orientation](labs/00-setup/README.md) | Running app, first Copilot chat, the 4 chat controls |
+| A1 | Models, Enterprise Configuration & Engineering Controls | Intermediate | [Lab A1](labs/a1-models-enterprise-controls/README.md) | Model evaluation scorecard · guardrail hook · enterprise control map |
+| A2 | Agent Architecture & Multi-Agent Systems | Advanced | [Lab A2](labs/a2-multi-agent-systems/README.md) | Planner / implementer / reviewer agents that ship *early retirement* |
+| A3 | MCP & Tool Governance | Advanced | [Lab A3](labs/a3-mcp-tool-governance/README.md) | MS Learn MCP + your own MCP server, allow-lists, audit, prompt-injection defence |
+| 🍽️ | Lunch | | | |
+| A4 | Context Engineering | Advanced | [Lab A4](labs/a4-context-engineering/README.md) | Instructions, enterprise knowledge, an Agent Skill, memory — measured before/after |
+| ☕ | Break | | | |
+| A5 | Agentic CI/CD | Advanced | [Lab A5](labs/a5-agentic-cicd/README.md) | Cloud agent fixes a bug, Copilot code review, an agentic CI-doctor workflow |
+
+📌 Keep the **[Cheat sheet](labs/CHEATSHEET.md)** open in a second tab — every UI path used today, verified for VS Code 1.146 (Nov 2026).
+
+---
+
+## 🏗️ The application in 30 seconds
+
+```mermaid
+flowchart LR
+    UI[web/ · UI] --> API[api/ · Node 24 + TypeScript]
+    API --> DB[(SQLite · synthetic data)]
+    API --> DOM[api/src/domain · pension rules]
+    MCP[mcp/pension-rules · MCP server] --> DOM
+```
+
+```bash
+npm start      # app on http://localhost:3000  (Codespaces opens the forwarded port)
+npm test       # 30 tests, a few seconds, zero dependencies
+```
+
+More: [Architecture](docs/architecture.md) · [Business rules](docs/domain/scheme-rules.md) · [Service levels](docs/domain/service-levels.md) · [Glossary](docs/domain/glossary.md) · [ADRs](docs/adr) · [Backlog](docs/backlog)
+
+---
+
+## 🆘 Fell behind? Catch up in one command
+
+Each lab starts from a known state. To jump to the **end state** of a lab:
+
+```bash
+git stash            # keep your own work (optional)
+npm run catch-up -- a2
+npm test
+```
+
+## 📏 Working agreements
+
+1. **Synthetic data only.** Never paste real member data, company code, secrets or tokens into prompts, files or screenshots.
+2. **You are the reviewer.** Read every diff and every tool call before approving. Agents propose — humans decide.
+3. **Instructions are guidance, not controls.** Real controls are permissions, hooks, policies and CI.
+4. **Observe, don't assume.** Expand tool calls, open the debug logs, check the References. A plausible answer is not proof.
+
+## 📂 Repository map
+
+```
+api/            Node 24 TypeScript API (domain · repositories · services · routes) + tests
+web/            Static UI (no build step)
+mcp/            pension-rules MCP server (hand-written stdio JSON-RPC) + tests
+data/seed/      Synthetic members, employers, contributions, service requests
+docs/           Architecture, business rules, ADRs, backlog, images
+labs/           00 + A1…A5 step-by-step labs, cheat sheet
+solutions/      End state of each lab (used by npm run catch-up)
+scripts/        verify-env, catch-up, post-create, create-backlog-issues, audit-report (npm run audit), check-public-safety
+infra/          Optional Azure Container Apps Bicep (not deployed in the workshop)
+.github/        CI, Copilot setup steps, templates (you add agents, skills, hooks, instructions)
+```
+
+---
+<sub>Fictional scenario and synthetic data. Contoso is a fictional company; not affiliated with any real pension fund or its systems. Scheme parameters are illustrative only.</sub>

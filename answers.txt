@@ -1,0 +1,47 @@
+Step 1
+Claude fable 5
+KIMI K3
+
+Step 2
+
+Claude sonnet 5.5:
+Rule R1: pensionableSalary in api/src/domain/pension.ts
+
+Formula: the result is (min(fullTimeSalary, cap) − franchise) × partTimeFactor, floored at 0 and rounded to cents with roundMoney. The scheme parameters come from SCHEME_2026, where franchise = 17,545 and salaryCap = 137,800.
+Input: fullTimeSalary is always the full-time equivalent salary. The part-time factor is applied last, after the cap and franchise.
+Validation: a fullTimeSalary that is negative or not finite throws RangeError('fullTimeSalary must be a non-negative number'). A partTimeFactor that is not finite, is ≤ 0, or is > 1 throws RangeError('partTimeFactor must be greater than 0 and at most 1').
+#	fullTimeSalary	partTimeFactor	expected	why it is an edge case
+1	17545	1	0	The salary equals the franchise exactly, so the result is 0 rather than an error.
+2	10000	0.5	0	The salary is below the franchise. Math.max(0, …) stops the result going negative (−7545 × 0.5).
+3	200000	1	120255	The salary is above the cap, so it is capped first: 137,800 − 17,545 = 120,255.
+4	137800	0.5	60127.5	The salary equals the cap exactly. The part-time factor is applied after the cap and franchise: 120,255 × 0.5.
+5	50000	0	throws RangeError('partTimeFactor must be greater than 0 and at most 1')	A factor of 0 sits on the excluded lower bound, because the check is <= 0. A factor of 1 is allowed.
+
+GPT 6.1 terra:
+R1 uses the full-time equivalent salary, capped at 137,800, then subtracts the 17,545 franchise.
+It floors that result at zero, applies the part-time factor, and rounds to cents.
+Salary must be finite and non-negative; the factor must be finite, greater than 0 and at most 1.
+#	fullTimeSalary	partTimeFactor	expected	why it is an edge case
+1	17545	1	0	Exactly at the franchise.
+2	200000	0.5	60127.5	Above the cap, with a part-time factor.
+3	17546	0.125	0.13	0.125 rounds up to cents.
+4	-1	1	RangeError('fullTimeSalary must be a non-negative number')	Negative salary is invalid.
+5	50000	0	RangeError('partTimeFactor must be greater than 0 and at most 1')	Zero is the excluded lower bound.
+
+Model A:
+17545 1 0
+10000 0.5 0
+200000 1 120255
+137800 0.5 60127.5
+file:///C:/Users/RILU/PyCharmProjects/Github/octocat-supply/api/src/domain/pension.ts:22
+    throw new RangeError('partTimeFactor must be greater than 0 and at most 1');
+          ^
+
+RangeError: partTimeFactor must be greater than 0 and at most 1
+
+Model B:
+17545 1 0
+200000 0.5 60127.5
+17546 0.125 0.13
+file:///C:/Users/RILU/PyCharmProjects/Github/octocat-supply/api/src/domain/pension.ts:19
+    throw new RangeError('fullTimeSalary must be a non-negative number');

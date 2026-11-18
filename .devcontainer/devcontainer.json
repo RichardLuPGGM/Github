@@ -1,68 +1,30 @@
 {
-  "dockerComposeFile": [
-    "docker-compose.yml"
-  ],
-  "service": "dev",
-  "forwardPorts": [
-    3000,
-    5137
-  ],
-  "portsAttributes": {
-    "3000": {
-      "label": "API",
-      "onAutoForward": "notify",
-      "visibility": "public"
-    },
-    "5137": {
-      "label": "Frontend",
-      "onAutoForward": "notify"
-    }
-  },
+  "name": "Contoso · GitHub Copilot Advanced Workshop",
+  "image": "mcr.microsoft.com/devcontainers/base:ubuntu-24.04",
   "features": {
-    "ghcr.io/devcontainers/features/node:1": {
-      "version": "24"
-    },
-    "ghcr.io/devcontainers/features/azure-cli:1": {},
-    "ghcr.io/devcontainers/features/python:1": {},
+    "ghcr.io/devcontainers/features/node:1": { "version": "24" },
     "ghcr.io/devcontainers/features/github-cli:1": {}
   },
+  "hostRequirements": { "cpus": 2, "memory": "4gb" },
+  "forwardPorts": [3000],
+  "portsAttributes": {
+    "3000": { "label": "Contoso app", "onAutoForward": "notify" }
+  },
+  "postCreateCommand": "bash scripts/post-create.sh",
   "customizations": {
     "vscode": {
       "extensions": [
-        "ms-azuretools.vscode-docker",
-        "GitHub.copilot",
-        "ms-vscode.extension-test-runner",
-        "vitest.explorer",
-        "ms-vscode.vscode-speech",
-        "Blodwynn.featurehighlight",
-        "bierner.markdown-mermaid",
-        "ms-azuretools.vscode-bicep",
-        "GitHub.vscode-pull-request-github"
+        "GitHub.copilot-chat",
+        "GitHub.vscode-pull-request-github",
+        "GitHub.vscode-github-actions",
+        "redhat.vscode-yaml",
+        "ms-azuretools.vscode-bicep"
       ],
       "settings": {
-        "editor.inlineSuggest.experimentalInlineEditsEnabled": true,
-        "github.copilot.chat.advanced.inlineEdits.enabled": true,
-        "github.copilot.chat.agent.enabled": true,
-        "github.copilot.chat.codesearch.enabled": true,
-        "github.copilot.chat.generateTests.codeLens": true,
-        "chat.agent.enabled": true,
-        "chat.promptFiles": true,
-        "git.enableSmartCommit": true,
-        "github.copilot.chat.search.semanticTextResults": true,
-        "github.copilot.chat.edits.temporalContext.enabled": true,
-        "github.copilot.chat.completionContext.typescript.mode": "on",
-        "github.copilot.chat.languageContext.typescript.enabled": true,
-        "github.copilot.nextEditSuggestions.enabled": true,
-        "github.copilot.chat.editor.temporalContext.enabled": true
+        "files.exclude": { "**/node_modules": true },
+        "editor.formatOnSave": false,
+        "chat.mcp.workspaceRootConfig.enabled": true
       }
     }
-  },
-  "postCreateCommand": "make -C app install && make -C app build",
-  // set the API port to public visibility
-  "postAttachCommand": "gh cs ports visibility 3000:public -c \"$CODESPACE_NAME\"",
-  "shutdownAction": "stopCompose",
-  "hostRequirements": {
-    "cpus": 4,
-    "memory": "8gb"
   }
 }
